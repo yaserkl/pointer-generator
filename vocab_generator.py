@@ -6,7 +6,7 @@ train_file = sys.argv[1]
 eval_file = sys.argv[2]
 out_dir = sys.argv[3]
 train_data = pd.read_csv(train_file,delimiter='\t',header=None)
-train_data.columns = ['title', 'title_pos', 'title_ner', 'article', 'article_pos', 'article_ner']
+train_data.columns = ['article', 'article_pos', 'article_ner', 'title', 'title_pos', 'title_ner']
 #valid_data = pd.read_csv(eval_file,delimiter='\t',header=None)
 #valid_data.columns = ['title', 'title_pos', 'title_ner', 'article', 'article_pos', 'article_ner']
 #all_text = list(train_data['title'].values)+list(train_data['article'].values)+list(valid_data['title'].values) + list(valid_data['article'].values)

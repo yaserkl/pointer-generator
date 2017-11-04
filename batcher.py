@@ -364,8 +364,8 @@ class Batcher(object):
     while True:
       with open(data_path) as f:
         for i,line in enumerate(f):
-          article, article_pos, article_ner, title, title_pos, title_ner = line.split('\t')
-          yield (article, article_pos, article_ner, title, title_pos, title_ner)
+          article, article_pos, article_ner, abstract, abstract_pos, abstract_ner = line.split('\t')
+          yield (article, article_pos, article_ner, abstract, abstract_pos, abstract_ner)
       if single_pass:
         break
 

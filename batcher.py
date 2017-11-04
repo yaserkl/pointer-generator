@@ -266,7 +266,6 @@ class Batcher(object):
       self._watch_thread.daemon = True
       self._watch_thread.start()
 
-
   def next_batch(self):
     """Return a Batch from the batch queue.
 
@@ -306,7 +305,6 @@ class Batcher(object):
       example = Example(article, abstract_sentences, self._vocab, self._hps) # Process into an Example.
       self._example_queue.put(example) # place the Example in the example queue.
 
-
   def fill_batch_queue(self):
     """Takes Examples out of example queue, sorts them by encoder sequence length, processes into Batches and places them in the batch queue.
 
@@ -333,7 +331,6 @@ class Batcher(object):
         ex = self._example_queue.get()
         b = [ex for _ in xrange(self._hps.batch_size)]
         self._batch_queue.put(Batch(b, self._hps, self._vocab))
-
 
   def watch_threads(self):
     """Watch example queue and batch queue threads and restart if dead."""

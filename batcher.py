@@ -287,12 +287,12 @@ class Batcher(object):
 
   def fill_example_queue(self):
     """Reads data from file and processes into Examples which are then placed into the example queue."""
-
     #input_gen = self.text_generator(data.example_generator(self._data_path, self._single_pass))
-    input_gen = self._CustomGenerator(self._data_path, self._single_pass)
+    input_gen = self._CustomGenerator_detailed(self._data_path, self._single_pass)
     while True:
       try:
-        (article, abstract) = input_gen.next() # read the next example from file. article and abstract are both strings.
+        #(article, abstract) = input_gen.next() # read the next example from file. article and abstract are both strings.
+        (article, article_pos, article_ner, abstract, abstract_pos, abstract_ner) = input_gen.next()
       except StopIteration: # if there are no more examples:
         tf.logging.info("The example generator for this example queue filling thread has exhausted data.")
         if self._single_pass:
@@ -367,8 +367,8 @@ class Batcher(object):
     while True:
       with open(data_path) as f:
         for i,line in enumerate(f):
-          title, title_pos, title_ner, article, article_pos, article_ner = line.split('\t')
-          yield (title, title_pos, title_ner, article, article_pos, article_ner)
+          article, article_pos, article_ner, title, title_pos, title_ner = line.split('\t')
+          yield (article, article_pos, article_ner, title, title_pos, title_ner)
       if single_pass:
         break
 

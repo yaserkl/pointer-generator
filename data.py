@@ -62,7 +62,7 @@ class Vocab(object):
           continue
         w = pieces[0]
         if w in [SENTENCE_START, SENTENCE_END, UNKNOWN_TOKEN, PAD_TOKEN, START_DECODING, STOP_DECODING]:
-          raise Exception('<s>, </s>, [UNK], [PAD], [START] and [STOP] shouldn\'t be in the vocab file, but %s is' % w)
+          raise Exception('[UNK], [PAD], [START] and [STOP] shouldn\'t be in the vocab file, but %s is' % w)
         if w in self._word_to_id:
           raise Exception('Duplicated word in vocabulary file: %s' % w)
         self._word_to_id[w] = self._count
@@ -234,10 +234,9 @@ def abstract2sents(abstract):
       start_p = abstract.index(SENTENCE_START, cur)
       end_p = abstract.index(SENTENCE_END, start_p + 1)
       cur = end_p + len(SENTENCE_END)
-      sents.append(abstract[start_p+len(SENTENCE_START):end_p])
+      sents.append(abstract[start_p + len(SENTENCE_START):end_p])
     except ValueError as e: # no more sentences
       return sents
-
 
 def show_art_oovs(article, vocab):
   """Returns the article string, highlighting the OOVs by placing __underscores__ around them"""

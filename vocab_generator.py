@@ -61,6 +61,8 @@ def run2(train_file, eval_file, out_dir):
 		ner.append(article_ner)
 		ner.append(title_ner)
 	f.close()
+	print('done reading the data...')
+	print('writing to vocab files')
 	vocab = Counter()
 	for t in text:
 	    vocab.update(t.lower().strip().split())

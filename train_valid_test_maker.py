@@ -1,3 +1,5 @@
+# python train_valid_test_maker.py ~/wapo/title/namas/cnn_dm/cnn/ ~/wapo/title/namas/cnn_dm/cnn/ 0.8
+
 import sys, os
 from glob import glob
 from random import shuffle
@@ -72,7 +74,7 @@ def run(indir, outdir, train_split):
     maker(indir, testlist, fw)
     fw.close()
 
-#indir = sys.argv[1]
-#outdir = sys.argv[2]
-#train_split = float(sys.argv[3])
+indir = sys.argv[1]
+outdir = sys.argv[2]
+train_split = float(sys.argv[3])
 run(indir, outdir, train_split)

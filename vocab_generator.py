@@ -95,5 +95,7 @@ def run2(train_file, eval_file, out_dir):
 train_file = sys.argv[1]
 eval_file = sys.argv[2]
 out_dir = sys.argv[3]
+if not os.path.exists(out_dir):
+	os.makedirs(out_dir)
 
 run2(train_file, eval_file, out_dir)

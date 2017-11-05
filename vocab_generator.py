@@ -47,7 +47,7 @@ def run(train_file, eval_file, out_dir):
 	    fw.write('{} {}\n'.format(key,value))
 	fw.close()
 
-def run2(train_file, eval_file, out_dir):
+def run2(train_file, out_dir):
 	text = []
 	pos = []
 	ner = []
@@ -98,4 +98,4 @@ out_dir = sys.argv[3]
 if not os.path.exists(out_dir):
 	os.makedirs(out_dir)
 
-run2(train_file, eval_file, out_dir)
+run2(train_file, out_dir)

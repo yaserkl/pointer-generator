@@ -61,7 +61,7 @@ class Vocab(object):
           print 'Warning: incorrectly formatted line in vocabulary file: %s\n' % line
           continue
         w = pieces[0]
-        if w in [SENTENCE_START, SENTENCE_END, UNKNOWN_TOKEN, PAD_TOKEN, START_DECODING, STOP_DECODING]:
+        if w in [UNKNOWN_TOKEN, PAD_TOKEN, START_DECODING, STOP_DECODING]:
           raise Exception('[UNK], [PAD], [START] and [STOP] shouldn\'t be in the vocab file, but %s is' % w)
         if w in self._word_to_id:
           raise Exception('Duplicated word in vocabulary file: %s' % w)

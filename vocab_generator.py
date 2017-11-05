@@ -93,8 +93,7 @@ def run2(train_file, out_dir):
 	fw.close()
 
 train_file = sys.argv[1]
-eval_file = sys.argv[2]
-out_dir = sys.argv[3]
+out_dir = sys.argv[2]
 if not os.path.exists(out_dir):
 	os.makedirs(out_dir)
 

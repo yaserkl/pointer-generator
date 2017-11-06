@@ -52,7 +52,6 @@ class SummarizationModel(object):
     if hps.mode=="decode" and hps.coverage:
       self.prev_coverage = tf.placeholder(tf.float32, [hps.batch_size, None], name='prev_coverage')
 
-
   def _make_feed_dict(self, batch, just_enc=False):
     """Make a feed dictionary mapping parts of the batch to the appropriate placeholders.
 
@@ -93,7 +92,6 @@ class SummarizationModel(object):
       encoder_outputs = tf.concat(axis=2, values=encoder_outputs) # concatenate the forwards and backwards states
     return encoder_outputs, fw_st, bw_st
 
-
   def _reduce_states(self, fw_st, bw_st):
     """Add to the graph a linear layer to reduce the encoder's final FW and BW state into a single initial state for the decoder. This is needed because the encoder is bidirectional but the decoder is not.
 
@@ -119,7 +117,6 @@ class SummarizationModel(object):
       new_c = tf.nn.relu(tf.matmul(old_c, w_reduce_c) + bias_reduce_c) # Get new cell from old cell
       new_h = tf.nn.relu(tf.matmul(old_h, w_reduce_h) + bias_reduce_h) # Get new state from old state
       return tf.contrib.rnn.LSTMStateTuple(new_c, new_h) # Return new cell and state
-
 
   def _add_decoder(self, inputs):
     """Add attention decoder to the graph. In train or eval mode, you call this once to get output on ALL steps. In decode (beam search) mode, you call this once for EACH decoder step.
@@ -284,7 +281,6 @@ class SummarizationModel(object):
       topk_probs, self._topk_ids = tf.nn.top_k(final_dists, hps.batch_size*2) # take the k largest probs. note batch_size=beam_size in decode mode
       self._topk_log_probs = tf.log(topk_probs)
 
-
   def _add_train_op(self):
     """Sets self._train_op, the op to run for training."""
     # Take gradients of the trainable variables w.r.t. the loss function to minimize
@@ -303,7 +299,6 @@ class SummarizationModel(object):
     optimizer = tf.train.AdagradOptimizer(self._hps.lr, initial_accumulator_value=self._hps.adagrad_init_acc)
     with tf.device("/gpu:0"):
       self._train_op = optimizer.apply_gradients(zip(grads, tvars), global_step=self.global_step, name='train_step')
-
 
   def build_graph(self):
     """Add the placeholders, model, global step, train_op and summaries to the graph"""
@@ -362,7 +357,6 @@ class SummarizationModel(object):
     # Given that the batch is a single example repeated, dec_in_state is identical across the batch so we just take the top row.
     dec_in_state = tf.contrib.rnn.LSTMStateTuple(dec_in_state.c[0], dec_in_state.h[0])
     return enc_states, dec_in_state
-
 
   def decode_onestep(self, sess, batch, latest_tokens, enc_states, dec_init_states, prev_coverage):
     """For beam search decoding. Run the decoder for one step.

@@ -75,7 +75,6 @@ class Example(object):
     self.original_abstract = abstract
     self.original_abstract_sents = abstract_sentences
 
-
   def get_dec_inp_targ_seqs(self, sequence, max_len, start_id, stop_id):
     """Given the reference summary as a sequence of tokens, return the input sequence for the decoder, and the target sequence which we will use to calculate loss. The sequence will be truncated if it is longer than max_len. The input sequence must start with the start_id and the target sequence must end with the stop_id (but not if it's been truncated).
 
@@ -99,14 +98,12 @@ class Example(object):
     assert len(inp) == len(target)
     return inp, target
 
-
   def pad_decoder_inp_targ(self, max_len, pad_id):
     """Pad decoder input and target sequences with pad_id up to max_len."""
     while len(self.dec_input) < max_len:
       self.dec_input.append(pad_id)
     while len(self.target) < max_len:
       self.target.append(pad_id)
-
 
   def pad_encoder_input(self, max_len, pad_id):
     """Pad the encoder input sequence with pad_id up to max_len."""

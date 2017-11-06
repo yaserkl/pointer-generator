@@ -57,7 +57,7 @@ tf.app.flags.DEFINE_float('adagrad_init_acc', 0.1, 'initial accumulator value fo
 tf.app.flags.DEFINE_float('rand_unif_init_mag', 0.02, 'magnitude for lstm cells random uniform inititalization')
 tf.app.flags.DEFINE_float('trunc_norm_init_std', 1e-4, 'std of trunc norm init, used for initializing everything else')
 tf.app.flags.DEFINE_float('max_grad_norm', 2.0, 'for gradient clipping')
-tf.app.flags.DEFINE_integer('max_iter', 100000, 'max number of iterations')
+tf.app.flags.DEFINE_integer('max_iter', 600000, 'max number of iterations')
 tf.app.flags.DEFINE_integer('loss_threshold', 1e-4, 'loss threshold to stop the training')
 
 # Pointer-generator or baseline model
@@ -152,9 +152,6 @@ def convert_to_coverage_model():
   print "saved."
   exit()
 
-def load_pretrain(sess, saver, ckpt):
-    pre_train_saver.restore(sess, ckpt.model_checkpoint_path)
-
 def setup_training(model, batcher):
   """Does setup before starting training (run_training)"""
   train_dir = os.path.join(FLAGS.log_root, "train")
@@ -184,7 +181,6 @@ def setup_training(model, batcher):
   except KeyboardInterrupt:
     tf.logging.info("Caught keyboard interrupt on worker. Stopping supervisor...")
     sv.stop()
-
 
 def run_training(model, batcher, sess_context_manager, sv, summary_writer):
   """Repeatedly runs training iterations, logging loss to screen and writing summaries"""
@@ -219,7 +215,7 @@ def run_training(model, batcher, sess_context_manager, sv, summary_writer):
       summary_writer.add_summary(summaries, train_step) # write the summaries
       if train_step % 100 == 0: # flush the summary writer every so often
         summary_writer.flush()
-      if train_step == FLAGS.max_iter or loss <= FLAGS.loss_threshold: break
+      if train_step > FLAGS.max_iter or loss <= FLAGS.loss_threshold: break
 
 def run_eval(model, batcher, vocab):
   """Repeatedly runs eval iterations, logging to screen and writing summaries. Saves the model with the best loss seen so far."""

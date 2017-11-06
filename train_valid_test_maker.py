@@ -1,4 +1,4 @@
-# python train_valid_test_maker.py ~/wapo/title/namas/cnn_dm/cnn/ ~/wapo/title/namas/cnn_dm/cnn/ 0.8
+# python train_valid_test_maker.py ~/wapo/title/namas/cnn_dm/cnn/ ~/wapo/title/namas/cnn_dm/cnn/ 0.7 0.1
 
 import sys, os
 from glob import glob
@@ -58,18 +58,25 @@ def maker(indir, filelist, fw):
 
         fw.write('{}\t{}\t{}\t{}\t{}\t{}\n'.format(fal, fap, fan, ftl, ftp, ftn))
 
-def run(indir, outdir, train_split):
+def run(indir, outdir, train_split, eval_split):
     filelist = glob('{}/article_spacy_line/*'.format(indir))
     print('loaded {} files...'.format(len(filelist)))
     shuffle(filelist)
-    trainlist = [k.split('/')[-1] for k in filelist[0:int(np.round(train_split*len(filelist)))]]
-    testlist = [k.split('/')[-1] for k in filelist[int(np.round(train_split*len(filelist))):]]
+    train_ind = int(np.round(train_split*len(filelist)))
+    eval_ind = int(np.round(eval_split*len(filelist)))
+    trainlist = [k.split('/')[-1] for k in filelist[0:train_ind]]
+    evallist = [k.split('/')[-1] for k in filelist[train_ind:train_ind+eval_ind]]
+    testlist = [k.split('/')[-1] for k in filelist[train_ind+eval_ind:]]
     print("len train: {}\tlen test: {}".format(len(trainlist),len(testlist)))
 
     fw = open('{}/train.txt'.format(outdir),'w')
     maker(indir, trainlist, fw)
     fw.close()
     
+    fw = open('{}/eval.txt'.format(outdir),'w')
+    maker(indir, evallist, fw)
+    fw.close()
+
     fw = open('{}/test.txt'.format(outdir),'w')
     maker(indir, testlist, fw)
     fw.close()
@@ -77,4 +84,6 @@ def run(indir, outdir, train_split):
 indir = sys.argv[1]
 outdir = sys.argv[2]
 train_split = float(sys.argv[3])
-run(indir, outdir, train_split)
+eval_split = float(sys.argv[4])
+
+run(indir, outdir, train_split, eval_split)

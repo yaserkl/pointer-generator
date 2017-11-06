@@ -246,7 +246,6 @@ def show_art_oovs(article, vocab):
   out_str = ' '.join(words)
   return out_str
 
-
 def show_abs_oovs(abstract, vocab, article_oovs):
   """Returns the abstract string, highlighting the article OOVs with __underscores__.
 

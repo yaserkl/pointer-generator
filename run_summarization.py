@@ -125,7 +125,8 @@ def restore_best_model():
   new_saver = tf.train.Saver() # this saver saves all variables that now exist, including Adagrad variables
   new_saver.save(sess, new_fname)
   print "Saved."
-  #exit()
+  #return curr_ckpt
+  exit()
 
 
 def convert_to_coverage_model():
@@ -151,6 +152,8 @@ def convert_to_coverage_model():
   print "saved."
   exit()
 
+def load_pretrain(sess, saver, ckpt):
+    pre_train_saver.restore(sess, ckpt.model_checkpoint_path)
 
 def setup_training(model, batcher):
   """Does setup before starting training (run_training)"""
@@ -197,6 +200,10 @@ def run_training(model, batcher, sess_context_manager, sv, summary_writer):
       t0=time.time()
       results = model.run_train_step(sess, batch)
       t1=time.time()
+      # get the summaries and iteration number so we can write summaries to tensorboard
+      summaries = results['summaries'] # we will write these summaries to tensorboard using summary_writer
+      train_step = results['global_step'] # we need this to update our running average loss
+
       tf.logging.info('seconds for training step {}: {}'.format(train_step, np.round(t1-t0,3)))
 
       loss = results['loss']
@@ -208,10 +215,6 @@ def run_training(model, batcher, sess_context_manager, sv, summary_writer):
       if FLAGS.coverage:
         coverage_loss = results['coverage_loss']
         tf.logging.info("coverage_loss: %f", coverage_loss) # print the coverage loss to screen
-
-      # get the summaries and iteration number so we can write summaries to tensorboard
-      summaries = results['summaries'] # we will write these summaries to tensorboard using summary_writer
-      train_step = results['global_step'] # we need this to update our running average loss
 
       summary_writer.add_summary(summaries, train_step) # write the summaries
       if train_step % 100 == 0: # flush the summary writer every so often

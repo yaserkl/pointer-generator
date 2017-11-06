@@ -57,6 +57,8 @@ tf.app.flags.DEFINE_float('adagrad_init_acc', 0.1, 'initial accumulator value fo
 tf.app.flags.DEFINE_float('rand_unif_init_mag', 0.02, 'magnitude for lstm cells random uniform inititalization')
 tf.app.flags.DEFINE_float('trunc_norm_init_std', 1e-4, 'std of trunc norm init, used for initializing everything else')
 tf.app.flags.DEFINE_float('max_grad_norm', 2.0, 'for gradient clipping')
+tf.app.flags.DEFINE_integer('max_iter', 100000, 'max number of iterations')
+tf.app.flags.DEFINE_integer('loss_threshold', 1e-4, 'loss threshold to stop the training')
 
 # Pointer-generator or baseline model
 tf.app.flags.DEFINE_boolean('pointer_gen', True, 'If True, use pointer-generator model. If False, use baseline model.')
@@ -191,11 +193,11 @@ def run_training(model, batcher, sess_context_manager, sv, summary_writer):
     while True: # repeats until interrupted
       batch = batcher.next_batch()
 
-      tf.logging.info('running training step...')
+      tf.logging.info('running training step ...')
       t0=time.time()
       results = model.run_train_step(sess, batch)
       t1=time.time()
-      tf.logging.info('seconds for training step: %.3f', t1-t0)
+      tf.logging.info('seconds for training step {}: {}'.format(train_step, np.round(t1-t0,3)))
 
       loss = results['loss']
       tf.logging.info('loss: %f', loss) # print the loss to screen
@@ -214,7 +216,7 @@ def run_training(model, batcher, sess_context_manager, sv, summary_writer):
       summary_writer.add_summary(summaries, train_step) # write the summaries
       if train_step % 100 == 0: # flush the summary writer every so often
         summary_writer.flush()
-
+      if train_step == FLAGS.max_iter or loss <= FLAGS.loss_threshold: break
 
 def run_eval(model, batcher, vocab):
   """Repeatedly runs eval iterations, logging to screen and writing summaries. Saves the model with the best loss seen so far."""

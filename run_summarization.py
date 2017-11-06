@@ -110,10 +110,10 @@ def restore_best_model():
   # Initialize all vars in the model
   sess = tf.Session(config=util.get_config())
   print "Initializing all variables..."
-  sess.run(tf.initialize_all_variables())
+  sess.run(tf.global_variables_initializer())
 
   # Restore the best model from eval dir
-  saver = tf.train.Saver([v for v in tf.all_variables() if "Adagrad" not in v.name])
+  saver = tf.train.Saver([v for v in tf.global_variables() if "Adagrad" not in v.name])
   print "Restoring all non-adagrad variables from best model in eval dir..."
   curr_ckpt = util.load_ckpt(saver, sess, "eval")
   print "Restored %s." % curr_ckpt
@@ -264,7 +264,6 @@ def run_eval(model, batcher, vocab):
     # flush the summary writer every so often
     if train_step % 100 == 0:
       summary_writer.flush()
-
 
 def main(unused_argv):
   if len(unused_argv) != 1: # prints a message if you've entered flags incorrectly

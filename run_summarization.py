@@ -125,7 +125,7 @@ def restore_best_model():
   new_saver = tf.train.Saver() # this saver saves all variables that now exist, including Adagrad variables
   new_saver.save(sess, new_fname)
   print "Saved."
-  exit()
+  #exit()
 
 
 def convert_to_coverage_model():

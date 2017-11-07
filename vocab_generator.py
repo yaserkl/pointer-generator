@@ -1,6 +1,5 @@
 import os, sys
 import operator
-import pandas as pd
 from collections import Counter
 
 def run(train_file, eval_file, out_dir):

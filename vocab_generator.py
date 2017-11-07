@@ -47,11 +47,21 @@ def run(train_file, eval_file, out_dir):
 	    fw.write('{} {}\n'.format(key,value))
 	fw.close()
 
-def run2(train_file, out_dir):
+def run2(train_file, eval_file, out_dir):
 	text = []
 	pos = []
 	ner = []
 	f = open(train_file)
+	for line in f:
+		(article, article_pos, article_ner, abstract, abstract_pos, abstract_ner) = line.strip().split('\t')
+		text.append(abstract)
+		text.append(article)
+		pos.append(article_pos)
+		pos.append(abstract_pos)
+		ner.append(article_ner)
+		ner.append(abstract_ner)
+	f.close()
+	f = open(eval_file)
 	for line in f:
 		(article, article_pos, article_ner, abstract, abstract_pos, abstract_ner) = line.strip().split('\t')
 		text.append(abstract)
@@ -93,8 +103,9 @@ def run2(train_file, out_dir):
 	fw.close()
 
 train_file = sys.argv[1]
-out_dir = sys.argv[2]
+eval_file = sys.argv[2]
+out_dir = sys.argv[3]
 if not os.path.exists(out_dir):
 	os.makedirs(out_dir)
 
-run2(train_file, out_dir)
+run2(train_file, eval_file, out_dir)

@@ -1,3 +1,5 @@
+#python vocab_generator.py ~/wapo/data/gigaword/agiga/train.txt ~/wapo/data/gigaword/agiga/eval.txt ~/wapo/working_dir/agiga/shared/
+
 import os, sys
 import operator
 from collections import Counter
@@ -50,26 +52,32 @@ def run2(train_file, eval_file, out_dir):
 	text = []
 	pos = []
 	ner = []
-	f = open(train_file)
-	for line in f:
-		(article, article_pos, article_ner, abstract, abstract_pos, abstract_ner) = line.strip().split('\t')
-		text.append(abstract)
-		text.append(article)
-		pos.append(article_pos)
-		pos.append(abstract_pos)
-		ner.append(article_ner)
-		ner.append(abstract_ner)
-	f.close()
-	f = open(eval_file)
-	for line in f:
-		(article, article_pos, article_ner, abstract, abstract_pos, abstract_ner) = line.strip().split('\t')
-		text.append(abstract)
-		text.append(article)
-		pos.append(article_pos)
-		pos.append(abstract_pos)
-		ner.append(article_ner)
-		ner.append(abstract_ner)
-	f.close()
+	for fl in [train_file,eval_file]:
+		f = open(fl)
+		for line in f:
+			try:
+				(article, article_pos, article_ner, abstract, abstract_pos, abstract_ner) = line.strip().split('\t')
+			except:
+				(article, article_pos, article_ner, abstract, abstract_pos, abstract_ner, highlight, highlight_pos, highlight_ner) = line.strip().split('\t')
+			text.append(abstract)
+			text.append(article)
+			try:
+				text.append(highlight)
+			except:
+				pass
+			pos.append(article_pos)
+			pos.append(abstract_pos)
+			try:
+				pos.append(highlight_pos)
+			except:
+				pass
+			ner.append(article_ner)
+			ner.append(abstract_ner)
+			try:
+				ner.append(highlight_ner)
+			except:
+				pass
+		f.close()
 	print('done reading the data...')
 	print('writing to vocab files')
 	vocab = Counter()

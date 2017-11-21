@@ -56,7 +56,35 @@ def maker(indir, filelist, fw):
             lines.append(line)
         ftn = '<d> {} </d>'.format(' '.join(lines))
 
-        fw.write('{}\t{}\t{}\t{}\t{}\t{}\n'.format(fal, fap, fan, ftl, ftp, ftn))
+        try:
+            fhl = open('{}/highlight_spacy_line/{}'.format(indir,fl))
+            lines = []
+            for line in ftl:
+                line = ' '.join(line.strip().split(' ')[0:-1])
+                line = '<s> {} </s>'.format(line)
+                lines.append(line)
+            fhl = '<d> {} </d>'.format(' '.join(lines))
+
+            fhp = open('{}/highlight_spacy_pos/{}'.format(indir,fl))
+            lines = []
+            for line in ftp:
+                line = ' '.join(line.strip().split(' ')[0:-1])
+                line = '<s> {} </s>'.format(line)
+                lines.append(line)
+            fhp = '<d> {} </d>'.format(' '.join(lines))
+
+            fhn = open('{}/highlight_spacy_ner/{}'.format(indir,fl))
+            lines = []
+            for line in ftn:
+                line = ' '.join(line.strip().split(' ')[0:-1])
+                line = '<s> {} </s>'.format(line)
+                lines.append(line)
+            fhn = '<d> {} </d>'.format(' '.join(lines))
+        except:
+            fhl = ''
+            fhp = ''
+            fhn = ''
+        fw.write('{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n'.format(fal, fap, fan, ftl, ftp, ftn, fhn, fhp, fhn))
 
 def run(indir, outdir, train_split, eval_split):
     filelist = glob('{}/article_spacy_line/*'.format(indir))
